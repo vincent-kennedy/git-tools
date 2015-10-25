@@ -1,0 +1,38 @@
+// Build script
+// Author: Andreas Borglin
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+task executableJar(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from { configurations.compile.collect { zipTree(it) } }
+
+    manifest {
+        attributes 'Main-Class': 'viking.atlassian.tools.Main'
+    }
+}
+
+mainClassName = "viking.atlassian.tools.Main"
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'com.squareup.retrofit:retrofit:1.6.1'
+    compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    compile 'com.beust:jcommander:1.30'
+    compile 'commons-codec:commons-codec:1.9'
+}
